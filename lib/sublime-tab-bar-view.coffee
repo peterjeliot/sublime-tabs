@@ -30,11 +30,13 @@ class SublimeTabBarView extends TabBarView
       tab.removeClass('temp') if tab.is('.temp')
       false
 
-  addTabForItem: (item, index) ->
+  addTabForItem: (item, insertIndex) ->
     if item.uri != "atom://config"
-        for tab in @getTabs()
-          @closeTab(tab) if tab.is('.temp')
+        for tab, tempIndex in @getTabs()
+          if tab.is('.temp')
+            @closeTab(tab)
+            insertIndex -= 1 if tempIndex < insertIndex
 
     tabView = new SublimeTabView(item, @pane, @openPermanent, @considerTemp)
-    @insertTabAtIndex(tabView, index)
+    @insertTabAtIndex(tabView, insertIndex)
     @updateActiveTab()
